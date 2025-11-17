@@ -1,0 +1,356 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=Poppins:wght@400;500&display=swap");
+
+:root {
+  --green: #254441;
+  --yellow: #e9d758;
+  --orange: #ff8552;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: var(--green);
+  background-color: var(--white);
+}
+
+.home {
+  overflow-x: hidden;
+  padding-top: 100px; /* Account for fixed header */
+}
+
+/* === HEADER === */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background-color: #254441;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 3rem;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-family: "Fraunces", serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 2rem;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+}
+
+.nav a:hover {
+  opacity: 0.8;
+}
+
+/* === HERO === */
+.hero {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+
+}
+
+.hero-img {
+  width: 100%;
+  height: auto;
+  transform: scaleX(-1);
+  object-fit: contain;
+  object-position: center;
+  
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 30%;
+  left: 20%;
+  font-size: 40px;
+  color: #254441;
+  text-align: left;
+}
+
+.hero-overlay h1 {
+  font-family: "Fraunces", serif;
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero-overlay p {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+/* === CONTENT WRAPPER === */
+.content-wrapper {
+  max-width: 1200px;
+  margin: 6rem auto;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* === COLORED BACKGROUNDS === */
+.yellow {
+  background-color: var(--yellow);
+}
+
+.orange {
+  background-color: var(--orange);
+  color: var(--white);
+}
+
+.green {
+  background-color: var(--green);
+  color: var(--yellow);
+}
+
+/* === ABOUT SECTION === */
+.about {
+  position: relative;
+  padding: 4rem 2rem;
+  background-color: var(--white);
+}
+
+.about {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.about-container {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+
+/* Image wrapper - left side */
+.about-img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 110%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  margin-left: -30%;
+}
+
+/* Yellow container - right side */
+.content-wrapper.yellow {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 65%;
+  background-color: var(--yellow);
+  padding: 4rem 4rem 4rem 8rem;
+  border-radius: 20px;
+  z-index: 1;
+  min-height: 350px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.about-inner {
+  width: 100%;
+  max-width: 500px;
+}
+
+.about-text {
+  width: 100%;
+}
+
+.about-text h2 {
+  font-family: "Fraunces", serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--green);
+  line-height: 1.1;
+}
+
+.about-text p {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: var(--green);
+  font-weight: 500;
+}
+
+.about-text button {
+  background-color: var(--white);
+  border: none;
+  border-radius: 50px;
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--green);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.about-text button:hover {
+  background-color: #f9f9f9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* === WHY EJENDA === */
+.why-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.why-img {
+  width: 200px;
+  height: auto;
+  border-radius: 12px;
+}
+
+.why-text h2 {
+  font-family: "Fraunces", serif;
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.why-text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* === MEAL PREP SECTION === */
+.meal-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  flex-wrap: wrap-reverse;
+}
+
+.meal-img {
+  width: 250px;
+  height: auto;
+  border-radius: 12px;
+}
+
+.meal-text h2 {
+  font-family: "Fraunces", serif;
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.meal-text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 968px) {
+  .about {
+    padding: 2rem 1rem;
+  }
+
+  .about-img {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .content-wrapper.yellow {
+    position: relative;
+    width: 100%;
+    transform: none;
+    margin-top: -3rem;
+    padding: 5rem 2rem 3rem 2rem;
+    text-align: center;
+  }
+
+  .about-inner {
+    margin: 0 auto;
+  }
+
+  .about-text h2 {
+    font-size: 2.5rem;
+  }
+
+  .about-text p {
+    font-size: 1.2rem;
+  }
+
+  .hero-overlay {
+    left: 10%;
+  }
+
+  .hero-overlay h1 {
+    font-size: 3rem;
+  }
+
+  .content-wrapper {
+    margin: 4rem auto;
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 0 1.5rem;
+  }
+
+  .logo {
+    font-size: 1.4rem;
+  }
+
+  .nav a {
+    margin-left: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .hero-overlay h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-overlay p {
+    font-size: 1.2rem;
+  }
+
+  .about-text h2 {
+    font-size: 2rem;
+  }
+
+  .about-text p {
+    font-size: 1.1rem;
+  }
+
+  .content-wrapper.yellow {
+    padding: 4rem 1.5rem 2.5rem 1.5rem;
+  }
+}
