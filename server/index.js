@@ -1,9 +1,11 @@
+// server/index.js
 const express = require("express");
 const cors = require("cors");
 const sql = require("./db");
 require("dotenv").config();
 
 const authRoutes = require("./authRoutes");
+const eventsRoutes = require("./eventsRoutes"); // 👈 make sure this filename exists
 
 const app = express();
 app.use(express.json());
@@ -14,8 +16,9 @@ app.get("/", (req, res) => {
   res.send("Ejenda API is running");
 });
 
-// AUTH ROUTES
+// AUTH ROUTES and EVENT ROUTES
 app.use("/api/auth", authRoutes);
+app.use("/api", eventsRoutes);   // 👈 this now matches the const above
 
 // DB TEST ROUTE
 app.get("/test", async (req, res) => {
@@ -23,8 +26,8 @@ app.get("/test", async (req, res) => {
     const result = await sql`SELECT NOW()`;
     res.json(result);
   } catch (err) {
-    console.error("DB error:", err); // <- LOG FULL ERROR
-    res.status(500).json({ error: err.message || "Database error" }); 
+    console.error("DB error:", err);
+    res.status(500).json({ error: err.message || "Database error" });
   }
 });
 

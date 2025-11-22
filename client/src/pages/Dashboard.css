@@ -1,0 +1,368 @@
+:root {
+  --ejenda-green: #184c3b;
+  --ejenda-yellow: #f2d457;
+  --ejenda-bg: #f7f5ef;
+  --ejenda-text: #243023;
+}
+
+/* Layout */
+
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: var(--ejenda-bg);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Sidebar */
+
+.dash-sidebar {
+  width: 260px;
+  background: var(--ejenda-green);
+  color: #ffffff;
+  padding: 1.5rem 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.dash-menu-btn {
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.dash-logo {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.dash-welcome {
+  margin-bottom: 2rem;
+}
+
+.dash-welcome-label {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.dash-welcome-name {
+  margin: 0.2rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.dash-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.dash-nav-item {
+  opacity: 0.85;
+  cursor: pointer;
+}
+
+.dash-nav-active {
+  font-weight: 700;
+}
+
+/* Main area */
+
+.dash-main {
+  flex: 1;
+  padding: 2rem 2.5rem 3rem;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Affirmation */
+
+.dash-affirmation-card {
+  background: #f4f3ed;
+  border-radius: 20px;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  color: var(--ejenda-text);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* Weekly calendar */
+
+.dash-week-section {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 1.5rem 1.5rem 1.75rem;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.dash-week-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.dash-week-header h2 {
+  margin: 0;
+  color: #d6502f;
+  font-size: 1.3rem;
+}
+
+.dash-week-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  color: #aa6a4b;
+}
+
+.dash-add-label {
+  font-size: 0.8rem;
+  color: #777f74;
+}
+
+.dash-week-days-row {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.8rem;
+  color: #878f83;
+}
+
+.dash-week-day-label {
+  width: 72px;
+  text-align: center;
+}
+
+/* Day cards */
+
+.dash-week-grid {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.dash-day-card {
+  width: 72px;
+  min-height: 80px;
+  background: #f4f3ed;
+  border-radius: 16px;
+  padding: 0.45rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.dash-day-empty {
+  margin: auto;
+  font-size: 0.7rem;
+  color: #a0a79e;
+  text-align: center;
+}
+
+.dash-events-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dash-event {
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  padding: 0.15rem 0.3rem;
+  font-size: 0.7rem;
+}
+
+.dash-event-gym {
+  background: rgba(24, 76, 59, 0.12);
+}
+
+.dash-event-meal {
+  background: rgba(242, 212, 87, 0.25);
+}
+
+.dash-event-other {
+  background: rgba(180, 180, 180, 0.2);
+}
+
+.dash-event-type {
+  margin-right: 0.2rem;
+}
+
+/* Add event form */
+
+.dash-add-form {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: flex-end;
+}
+
+.dash-add-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.75rem;
+}
+
+.dash-add-field label {
+  color: #6a7167;
+}
+
+.dash-add-field select,
+.dash-add-field input {
+  border-radius: 999px;
+  border: 1px solid #d5d7cf;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.dash-add-field-wide {
+  min-width: 220px;
+}
+
+.dash-add-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  background: var(--ejenda-yellow);
+  color: var(--ejenda-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.dash-add-btn:hover {
+  background: #f0cb3a;
+}
+
+/* Bottom row */
+
+.dash-bottom-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.5fr;
+  gap: 1.5rem;
+}
+
+/* Grocery */
+
+.dash-grocery-card {
+  background: #f4f3ed;
+  border-radius: 18px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.dash-grocery-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: var(--ejenda-text);
+}
+
+.dash-grocery-card textarea {
+  width: 100%;
+  min-height: 130px;
+  border-radius: 14px;
+  border: 1px solid #d5d7cf;
+  padding: 0.6rem 0.7rem;
+  font-size: 0.85rem;
+  resize: vertical;
+  outline: none;
+}
+
+/* Recipes */
+
+.dash-recipes-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 1rem 1.2rem 1.2rem;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.dash-recipes-card h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1rem;
+  color: #d6502f;
+}
+
+.dash-recipe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.dash-recipe-item {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0.75rem;
+  background: #f4f3ed;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.dash-recipe-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dash-recipe-info {
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dash-recipe-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.1rem;
+}
+
+.dash-recipe-meta,
+.dash-recipe-ingredients {
+  font-size: 0.75rem;
+  color: #6e746a;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .dash-sidebar {
+    display: none;
+  }
+
+  .dash-main {
+    padding: 1.5rem 1.25rem 2rem;
+  }
+
+  .dash-week-grid {
+    overflow-x: auto;
+  }
+
+  .dash-bottom-row {
+    grid-template-columns: 1fr;
+  }
+}

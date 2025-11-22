@@ -11,8 +11,4 @@ const sql = postgres({
   ssl: "require",
 });
 
-console.log("Loaded DB password length:", process.env.SUPABASE_DB_PASSWORD?.length);
-console.log("DB password chars:", [...process.env.SUPABASE_DB_PASSWORD || ""]);
-
-
 module.exports = sql;

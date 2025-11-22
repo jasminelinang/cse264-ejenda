@@ -1,13 +1,22 @@
+// server/authRoutes.js
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const sql = require("./db"); // postgres.js client
+const sql = require("./db");
 
 const router = express.Router();
 
 // POST /api/auth/signup
 router.post("/signup", async (req, res) => {
-  const { name, email, password } = req.body;
+  const {
+    name,
+    email,
+    password,
+    height,
+    weight,
+    fitnessGoal,
+    dietPrefs,
+  } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ error: "Email and password required" });
@@ -24,25 +33,29 @@ router.post("/signup", async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
+    // convert height/weight from string → integer (or null)
+    const parsedHeight = height ? parseInt(height, 10) : null;
+    const parsedWeight = weight ? parseInt(weight, 10) : null;
+
     const inserted = await sql`
-      INSERT INTO users (name, email, password_hash)
-      VALUES (${name}, ${email}, ${passwordHash})
-      RETURNING id, email, name, created_at
+      INSERT INTO users
+        (name, email, password_hash, height, weight, fitness_goal, diet_prefs)
+      VALUES
+        (${name}, ${email}, ${passwordHash},
+         ${parsedHeight}, ${parsedWeight}, ${fitnessGoal}, ${dietPrefs})
+      RETURNING
+        id, name, email, height, weight, fitness_goal, diet_prefs, created_at
     `;
 
     const user = inserted[0];
 
-    // create a JWT
     const token = jwt.sign(
       { userId: user.id },
       process.env.JWT_SECRET || "dev-secret",
       { expiresIn: "7d" }
     );
 
-    res.status(201).json({
-      user,
-      token,
-    });
+    res.status(201).json({ user, token });
   } catch (err) {
     console.error("Signup error:", err);
     res.status(500).json({ error: "Internal server error" });
@@ -59,7 +72,8 @@ router.post("/login", async (req, res) => {
 
   try {
     const users = await sql`
-      SELECT id, email, name, password_hash
+      SELECT id, name, email, password_hash,
+             height, weight, fitness_goal, diet_prefs
       FROM users
       WHERE email = ${email}
     `;
@@ -81,7 +95,7 @@ router.post("/login", async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    // Don't send password_hash back
+    // don’t send password_hash back
     delete user.password_hash;
 
     res.json({ user, token });
