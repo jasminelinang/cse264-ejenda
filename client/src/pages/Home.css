@@ -354,3 +354,38 @@ body {
     padding: 4rem 1.5rem 2.5rem 1.5rem;
   }
 }
+.signup-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ffffff; 
+  color: black;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.signup-btn:hover {
+  opacity: 0.9;
+}
+
+/* make sure the yellow card and its contents sit ABOVE the image */
+.about {
+  position: relative;
+}
+
+.about-img {
+  pointer-events: none;      /* image will no longer steal clicks */
+}
+
+/* make sure the text + button are clickable and above everything */
+.about-text {
+  position: relative;
+  z-index: 2;
+}
+
+.about-text button {
+  position: relative;
+  z-index: 3;
+  cursor: pointer;
+}

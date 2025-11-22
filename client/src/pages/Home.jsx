@@ -1,20 +1,29 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
+
 import heroImg from "../assets/free_girl.jpeg";
 import aboutImg from "../assets/stretching_girl.png";
 import stonesImg from "../assets/rocks.png";
 import pastaImg from "../assets/protein_pasta.jpeg";
 
+function Home() {
+  const navigate = useNavigate();
 
+  const goToLogin = () => {
+    console.log("Button clicked → navigating to /login");
+    navigate("/login");
+  };
 
-const Home: React.FC = () => {
+  
+
   return (
     <div className="home">
       {/* Header */}
       <header className="header">
         <div className="logo">Ejenda</div>
         <nav className="nav">
-          <a href="#">Log in / Sign Up</a>
+          <Link to="/login">Log in / Sign Up</Link>
           <a href="#about">About</a>
           <a href="#why">Why Ejenda</a>
         </nav>
@@ -22,7 +31,7 @@ const Home: React.FC = () => {
 
       {/* Hero section */}
       <section className="hero">
-        <img src={heroImg} alt="Ejenda Hero" className="hero-img" /> 
+        <img src={heroImg} alt="Ejenda Hero" className="hero-img" />
         <div className="hero-overlay">
           <h1>Ejenda</h1>
           <p>Your day your way.</p>
@@ -31,10 +40,8 @@ const Home: React.FC = () => {
 
       {/* About Section */}
       <section id="about" className="about">
-        {/* Image on the left */}
         <img src={aboutImg} alt="About Ejenda" className="about-img" />
-        
-        {/* Yellow container on the right */}
+
         <div className="content-wrapper yellow">
           <div className="about-inner">
             <div className="about-text">
@@ -42,21 +49,28 @@ const Home: React.FC = () => {
               <p>
                 Manage your calendar, personalized meal prep, create a gym routine!
               </p>
-              <button>Sign up/Log-in</button>
+
+            
+              <button
+                onClick={goToLogin}
+                style={{ position: "relative", zIndex: 9999, cursor: "pointer" }}
+              >
+                Sign up / Log-in
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why Ejenda Section */}
+      {/* Why Section */}
       <section id="why" className="why">
         <div className="content-wrapper orange">
           <div className="why-inner">
             <div className="why-text">
               <h2>Why Ejenda?</h2>
               <p>
-                Fuel your body. Shape your routine. Plan out your weekly
-                meetings easier and hit your protein goals.
+                Fuel your body. Shape your routine. Plan out your weekly meetings
+                easier and hit your protein goals.
               </p>
             </div>
             <img src={stonesImg} alt="Balance stones" className="why-img" />
@@ -72,8 +86,8 @@ const Home: React.FC = () => {
             <div className="meal-text">
               <h2>Meal Prep</h2>
               <p>
-                Fuel your body. Shape your routine. Plan out your weekly
-                meetings easier and hit your protein goals.
+                Fuel your body. Shape your routine. Plan out your weekly meetings
+                easier and hit your protein goals.
               </p>
             </div>
           </div>
@@ -81,6 +95,6 @@ const Home: React.FC = () => {
       </section>
     </div>
   );
-};
+}
 
 export default Home;
