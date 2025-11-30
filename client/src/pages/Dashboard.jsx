@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Dashboard.css";
+// Added
+import LogoutButton from "./LogoutButton.jsx";
 
 const API_BASE = "http://localhost:3000"; // for later when you save to backend
 
@@ -31,7 +33,6 @@ const sampleRecipes = [
 ];
 
 function Dashboard() {
-  // pull name from localStorage if you saved it on login
   const storedName =
     localStorage.getItem("ejenda_name") ||
     localStorage.getItem("ejenda_user_name") ||
@@ -39,26 +40,17 @@ function Dashboard() {
 
   const [affirmation, setAffirmation] = useState(sampleAffirmations[0]);
   const [groceryText, setGroceryText] = useState("");
-  const [events, setEvents] = useState([]); // { id, dayIndex, title, type }
+  const [events, setEvents] = useState([]); 
 
   const [newEventDay, setNewEventDay] = useState("M");
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventType, setNewEventType] = useState("gym");
 
-  // pick a random affirmation when dashboard loads
   useEffect(() => {
     const random =
       sampleAffirmations[Math.floor(Math.random() * sampleAffirmations.length)];
     setAffirmation(random);
   }, []);
-
-  // TODO: later – load events from backend for this user
-  // useEffect(() => {
-  //   fetch(`${API_BASE}/api/events`)
-  //     .then(res => res.json())
-  //     .then(data => setEvents(data))
-  //     .catch(err => console.error("Error loading events:", err));
-  // }, []);
 
   const handleAddEvent = (e) => {
     e.preventDefault();
@@ -73,14 +65,6 @@ function Dashboard() {
     };
 
     setEvents((prev) => [...prev, newEvent]);
-
-    // TODO: later – POST to backend
-    // fetch(`${API_BASE}/api/events`, {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(newEvent),
-    // });
-
     setNewEventTitle("");
   };
 
@@ -98,7 +82,11 @@ function Dashboard() {
         <div className="dash-welcome">
           <p className="dash-welcome-label">Welcome back,</p>
           <p className="dash-welcome-name">{storedName}</p>
+
+          {/*logout*/}
+          <LogoutButton />
         </div>
+
         <nav className="dash-nav">
           <span className="dash-nav-item dash-nav-active">Dashboard</span>
           <span className="dash-nav-item">Gym planner (soon)</span>
@@ -152,7 +140,7 @@ function Dashboard() {
             ))}
           </div>
 
-          {/* Quick add event form */}
+          {/* add event form */}
           <form className="dash-add-form" onSubmit={handleAddEvent}>
             <div className="dash-add-field">
               <label>Day</label>
@@ -196,9 +184,8 @@ function Dashboard() {
           </form>
         </section>
 
-        {/* Bottom layout: grocery + recipes */}
+        {/* grocery + recipes */}
         <section className="dash-bottom-row">
-          {/* Grocery list */}
           <div className="dash-grocery-card">
             <h3>Grocery List</h3>
             <textarea
@@ -208,7 +195,6 @@ function Dashboard() {
             />
           </div>
 
-          {/* Recipes */}
           <div className="dash-recipes-card">
             <h3>This week&apos;s recipes:</h3>
             <div className="dash-recipe-list">

@@ -346,6 +346,22 @@
   font-size: 0.75rem;
   color: #6e746a;
 }
+.dash-logout-btn {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: #d6502f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.dash-logout-btn:hover {
+  background-color: #d6502f;
+}
+
 
 /* Responsive */
 
