@@ -1,0 +1,33 @@
+/* .settings-page {
+  padding: 20px;
+  max-width: 500px;
+  margin: auto;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.settings-field label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.settings-save-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.settings-save-btn:hover {
+  background-color: #45a049;
+}
+
+.settings-message {
+  margin-top: 10px;
+  color: green;
+} */

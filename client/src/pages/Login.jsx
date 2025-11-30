@@ -182,6 +182,8 @@ function Login() {
                   <option value="dairy free">Dairy-free</option>
                   <option value="nut allergy">Nut allergy</option>
                   <option value="shellfish allergy">Shellfish allergy</option>
+                   <option value="halal">Halal</option>
+
                 </select>
               </div>
             </>

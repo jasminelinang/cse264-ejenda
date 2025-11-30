@@ -3,7 +3,7 @@ import "./Dashboard.css";
 // Added
 import LogoutButton from "./LogoutButton.jsx";
 
-const API_BASE = "http://localhost:3000"; // for later when you save to backend
+const API_BASE = "http://localhost:3000"; 
 
 const days = ["S", "M", "T", "W", "Th", "F", "Sa"];
 
@@ -11,6 +11,7 @@ const sampleAffirmations = [
   "I am capable of achieving my goals.",
   "I honor my body by taking care of it.",
   "Small steps today create big results tomorrow.",
+
 ];
 
 const sampleRecipes = [
