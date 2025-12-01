@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Dashboard.css";
 // Added
 import LogoutButton from "./LogoutButton.jsx";
-import GymPlanner from "./gymPlanner"; 
+
 
 const API_BASE = "http://localhost:3000"; 
 
@@ -49,14 +49,33 @@ function Dashboard() {
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventType, setNewEventType] = useState("gym");
 
-  const [showGymPlanner, setShowGymPlanner] = useState(false);
-  const [currentPage, setCurrentPage] = useState("dashboard");
+  const [exerciseCategories, setExerciseCategories] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
+
+const [currentPage, setCurrentPage] = useState("dashboard"); 
 
   useEffect(() => {
     const random =
       sampleAffirmations[Math.floor(Math.random() * sampleAffirmations.length)];
     setAffirmation(random);
   }, []);
+
+  useEffect(() => {
+  async function loadCategories() {
+    try {
+      const res = await fetch("https://wger.de/api/v2/exercisecategory/");
+      const data = await res.json();
+      setExerciseCategories(data.results); // only broad categories
+    } catch (err) {
+      console.error("Failed to load gym categories", err);
+    } finally {
+      setLoadingCategories(false);
+    }
+  }
+
+  loadCategories();
+}, []);
 
   const handleAddEvent = (e) => {
     e.preventDefault();
@@ -77,11 +96,6 @@ function Dashboard() {
   const eventsForDay = (dayIndex) =>
     events.filter((ev) => ev.dayIndex === dayIndex);
 
-  //going to gym planner page
-  if (currentPage === "gym") {
-    return <GymPlanner onGoBack={() => setCurrentPage("dashboard")} />;
-  }
-
   return (
     <div className="dashboard">
       {/* Sidebar */}
@@ -100,14 +114,6 @@ function Dashboard() {
 
         <nav className="dash-nav">
           <span className="dash-nav-item dash-nav-active">Dashboard</span>
-          <span 
-            className="dash-nav-item"
-            style={{ cursor: "pointer" }}
-            onClick={() => setCurrentPage("gym")}
-          >
-            Gym planner
-          </span>
-          <span className="dash-nav-item">Meal planner (soon)</span>
           <span className="dash-nav-item">Settings</span>
         </nav>
       </aside>
@@ -185,15 +191,35 @@ function Dashboard() {
               </select>
             </div>
 
-            <div className="dash-add-field dash-add-field-wide">
-              <label>Title</label>
-              <input
-                type="text"
-                placeholder="Leg day, meal prep, etc."
-                value={newEventTitle}
-                onChange={(e) => setNewEventTitle(e.target.value)}
-              />
-            </div>
+<div className="dash-add-field dash-add-field-wide">
+  <label>Title</label>
+
+  {newEventType === "gym" ? (
+    <select
+      value={newEventTitle}
+      onChange={(e) => setNewEventTitle(e.target.value)}
+    >
+      <option value="">Select exercise category</option>
+
+      {loadingCategories ? (
+        <option>Loading...</option>
+      ) : (
+        exerciseCategories.map((cat) => (
+          <option key={cat.id} value={cat.name}>
+            {cat.name}
+          </option>
+        ))
+      )}
+    </select>
+  ) : (
+    <input
+      type="text"
+      placeholder="Meal prep, study, etc."
+      value={newEventTitle}
+      onChange={(e) => setNewEventTitle(e.target.value)}
+    />
+  )}
+</div>
 
             <button type="submit" className="dash-add-btn">
               Add to week
