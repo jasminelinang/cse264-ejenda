@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Gym_planner.css";
+import "./gymPlanner.css";
 
 const presetRoutines = ["Core routine", "Toning routine", "Full-body routine"];
 
@@ -9,7 +9,11 @@ const dailyTimes = Array.from({ length: 16 }, (_, i) => {
   return `${hour.toString().padStart(2, "0")}:00`;
 });
 
-export default function GymPlanner({ existingSchedule = [], onAddSession }) {
+export default function GymPlanner({
+  existingSchedule = [],
+  onAddSession,
+  onGoBack
+}) {
   const [freeSlots, setFreeSlots] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
   const [routine, setRoutine] = useState("");
@@ -38,6 +42,11 @@ export default function GymPlanner({ existingSchedule = [], onAddSession }) {
 
   return (
     <div className="gym-box">
+
+      {/* Back button */}
+      <button className="back-btn" onClick={onGoBack}>
+        ← Back to Dashboard
+      </button>
       <h2>Gym Scheduling & Workout Routines</h2>
 
       {/* Free Time Display */}

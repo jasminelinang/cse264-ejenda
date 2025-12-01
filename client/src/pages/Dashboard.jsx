@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Dashboard.css";
 // Added
 import LogoutButton from "./LogoutButton.jsx";
+import GymPlanner from "./gymPlanner"; 
 
 const API_BASE = "http://localhost:3000"; 
 
@@ -48,6 +49,9 @@ function Dashboard() {
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventType, setNewEventType] = useState("gym");
 
+  const [showGymPlanner, setShowGymPlanner] = useState(false);
+  const [currentPage, setCurrentPage] = useState("dashboard");
+
   useEffect(() => {
     const random =
       sampleAffirmations[Math.floor(Math.random() * sampleAffirmations.length)];
@@ -73,6 +77,11 @@ function Dashboard() {
   const eventsForDay = (dayIndex) =>
     events.filter((ev) => ev.dayIndex === dayIndex);
 
+  //going to gym planner page
+  if (currentPage === "gym") {
+    return <GymPlanner onGoBack={() => setCurrentPage("dashboard")} />;
+  }
+
   return (
     <div className="dashboard">
       {/* Sidebar */}
@@ -91,7 +100,13 @@ function Dashboard() {
 
         <nav className="dash-nav">
           <span className="dash-nav-item dash-nav-active">Dashboard</span>
-          <span className="dash-nav-item">Gym planner (soon)</span>
+          <span 
+            className="dash-nav-item"
+            style={{ cursor: "pointer" }}
+            onClick={() => setCurrentPage("gym")}
+          >
+            Gym planner
+          </span>
           <span className="dash-nav-item">Meal planner (soon)</span>
           <span className="dash-nav-item">Settings</span>
         </nav>
@@ -185,7 +200,7 @@ function Dashboard() {
             </button>
           </form>
         </section>
-
+        
         {/* grocery + recipes */}
         <section className="dash-bottom-row">
           <div className="dash-grocery-card" style={{ position: "relative" }}>
