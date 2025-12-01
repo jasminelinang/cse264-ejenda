@@ -15,24 +15,25 @@ const sampleAffirmations = [
 
 ];
 
-const sampleRecipes = [
-  {
-    id: 1,
-    name: "Protein Pasta",
-    time: "40 minutes",
-    ingredients: "Chicken, pasta, broccoli, cheese",
-    imageUrl:
-      "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress",
-  },
-  {
-    id: 2,
-    name: "Overloaded Potatoes",
-    time: "35 minutes",
-    ingredients: "Potatoes, cheese, veggies",
-    imageUrl:
-      "https://images.pexels.com/photos/4106483/pexels-photo-4106483.jpeg?auto=compress",
-  },
-];
+
+// const sampleRecipes = [
+//   {
+//     id: 1,
+//     name: "Protein Pasta",
+//     time: "40 minutes",
+//     ingredients: "Chicken, pasta, broccoli, cheese",
+//     imageUrl:
+//       "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress",
+//   },
+//   {
+//     id: 2,
+//     name: "Overloaded Potatoes",
+//     time: "35 minutes",
+//     ingredients: "Potatoes, cheese, veggies",
+//     imageUrl:
+//       "https://images.pexels.com/photos/4106483/pexels-photo-4106483.jpeg?auto=compress",
+//   },
+// ];
 
 function Dashboard() {
   const storedName =
@@ -51,6 +52,8 @@ function Dashboard() {
 
   const [exerciseCategories, setExerciseCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
+
+  const [weeklyRecipes, setWeeklyRecipes] = useState([]);
 
 
   useEffect(() => {
@@ -73,7 +76,58 @@ function Dashboard() {
   }
 
   loadCategories();
+  }, []);
+
+  useEffect(() => {
+  async function loadOrRefreshWeeklyMeals() {
+    const saved = localStorage.getItem("weekly_meals");
+    const savedTime = localStorage.getItem("weekly_meals_timestamp");
+
+    // If we have saved meals AND timestamp is < 7 days old → reuse it
+    if (saved && savedTime) {
+      const age = Date.now() - Number(savedTime);
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+      if (age < sevenDays) {
+        setWeeklyRecipes(JSON.parse(saved));
+        return; // 👍 skip fetching
+      }
+    }
+
+    // Otherwise → fetch 3 new recipes
+    const recipes = [];
+    for (let i = 0; i < 2; i++) {
+      const res = await fetch(
+        "https://www.themealdb.com/api/json/v1/1/random.php"
+      );
+      const data = await res.json();
+      if (data.meals?.[0]) recipes.push(data.meals[0]);
+    }
+
+    // Save for next time
+    localStorage.setItem("weekly_meals", JSON.stringify(recipes));
+    localStorage.setItem("weekly_meals_timestamp", Date.now().toString());
+
+    setWeeklyRecipes(recipes);
+  }
+
+  loadOrRefreshWeeklyMeals();
 }, []);
+
+async function refreshWeeklyMeals() {
+  const recipes = [];
+
+  for (let i = 0; i < 2; i++) {
+    const res = await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
+    const data = await res.json();
+    if (data.meals?.[0]) recipes.push(data.meals[0]);
+  }
+
+  localStorage.setItem("weekly_meals", JSON.stringify(recipes));
+  localStorage.setItem("weekly_meals_timestamp", Date.now().toString());
+
+  setWeeklyRecipes(recipes);
+}
 
   const handleAddEvent = (e) => {
     e.preventDefault();
@@ -349,7 +403,7 @@ function Dashboard() {
             </ul>
           </div>
 
-          <div className="dash-recipes-card">
+          {/* <div className="dash-recipes-card">
             <h3>This week&apos;s recipes:</h3>
             <div className="dash-recipe-list">
               {sampleRecipes.map((r) => (
@@ -371,6 +425,56 @@ function Dashboard() {
                 </div>
               ))}
             </div>
+          </div> */}
+
+          <div className="dash-recipes-card">
+            <h3>This week's recipes:</h3>
+            <div className="dash-recipe-list">
+
+              {weeklyRecipes.length === 0 ? (
+                <p>Loading recipes...</p>
+              ) : (
+                weeklyRecipes.map(meal => (
+                  <div key={meal.idMeal} className="dash-recipe-item">
+                    
+                    <img 
+                      src={meal.strMealThumb} 
+                      alt={meal.strMeal} 
+                      className="dash-recipe-image" 
+                    />
+
+                    <div className="dash-recipe-info">
+                      <div className="dash-recipe-name">{meal.strMeal}</div>
+
+                      <div className="dash-recipe-meta">
+                        Category: {meal.strCategory || "N/A"}
+                      </div>
+
+                      <div className="dash-recipe-ingredients">
+                        Ingredients: {
+                          [
+                            meal.strIngredient1,
+                            meal.strIngredient2,
+                            meal.strIngredient3,
+                            meal.strIngredient4
+                          ]
+                            .filter(Boolean)
+                            .join(", ")
+                        }
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+
+            </div>
+
+                                      <button 
+      onClick={refreshWeeklyMeals}
+      className="refresh-btn"
+    >
+      Refresh Weekly Meals
+    </button>
           </div>
         </section>
       </main>

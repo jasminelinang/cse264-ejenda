@@ -382,3 +382,29 @@
     grid-template-columns: 1fr;
   }
 }
+
+.dash-recipes-card {
+  display: flex;
+  flex-direction: column;
+  /* remove justify-content: space-between */
+  padding: 1rem 1.2rem; /* remove extra bottom padding */
+  position: relative;
+}
+
+.refresh-btn {
+  align-self: flex-end; /* keep it on the right */
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  background: var(--ejenda-yellow);
+  color: var(--ejenda-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+  margin-top: 1rem; /* optional: spacing from recipe list above */
+}
+
+.refresh-btn:hover {
+  background: #f0cb3a;
+}
