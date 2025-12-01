@@ -184,7 +184,6 @@ async function refreshWeeklyMeals() {
               <h2>Weekly Calendar</h2>
               <p className="dash-week-subtitle">Plan your gym + meals</p>
             </div>
-            <div className="dash-add-label">Add a block</div>
           </div>
           <div className="dash-week-days-row">
             {days.map((d) => (
@@ -469,12 +468,12 @@ async function refreshWeeklyMeals() {
 
             </div>
 
-                                      <button 
-      onClick={refreshWeeklyMeals}
-      className="refresh-btn"
-    >
-      Refresh Weekly Meals
-    </button>
+          <button 
+            onClick={refreshWeeklyMeals}
+            className="refresh-btn"
+          >
+            Refresh Weekly Meals
+          </button>
           </div>
         </section>
       </main>
