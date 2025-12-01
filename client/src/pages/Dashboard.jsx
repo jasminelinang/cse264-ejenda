@@ -40,7 +40,8 @@ function Dashboard() {
     "Friend";
 
   const [affirmation, setAffirmation] = useState(sampleAffirmations[0]);
-  const [groceryText, setGroceryText] = useState("");
+  const [groceryList, setGroceryList] = useState([]);
+  const [nextId, setNextId] = useState(1);
   const [events, setEvents] = useState([]); 
 
   const [newEventDay, setNewEventDay] = useState("M");
@@ -187,13 +188,126 @@ function Dashboard() {
 
         {/* grocery + recipes */}
         <section className="dash-bottom-row">
-          <div className="dash-grocery-card">
-            <h3>Grocery List</h3>
-            <textarea
-              value={groceryText}
-              onChange={(e) => setGroceryText(e.target.value)}
-              placeholder="- Chicken\n- Pasta\n- Veggies"
-            />
+          <div className="dash-grocery-card" style={{ position: "relative" }}>
+            <h3 style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              Grocery List
+              <button
+                onClick={() => {
+                  setGroceryList([
+                    ...groceryList,
+                    { id: nextId, text: "", checked: false, editing: true }
+                  ]);
+                  setNextId(nextId + 1);
+                }}
+                style={{
+                  border: "none",
+                  background: "#646cff",
+                  color: "white",
+                  borderRadius: "50%",
+                  width: "28px",
+                  height: "28px",
+                  cursor: "pointer",
+                  fontSize: "20px",
+                  lineHeight: "26px",
+                  padding: 0
+                }}
+              >
+                +
+              </button>
+            </h3>
+
+            <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
+              {groceryList.map((item) => (
+                <li
+                  key={item.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "8px",
+                    gap: "8px"
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={item.checked}
+                    onChange={() =>
+                      setGroceryList(
+                        groceryList.map((g) =>
+                          g.id === item.id ? { ...g, checked: !g.checked } : g
+                        )
+                      )
+                    }
+                  />
+
+                  {/* If editing, show input box */}
+                  {item.editing ? (
+                    <input
+                      type="text"
+                      value={item.text}
+                      autoFocus
+                      placeholder="New item..."
+                      onChange={(e) =>
+                        setGroceryList(
+                          groceryList.map((g) =>
+                            g.id === item.id ? { ...g, text: e.target.value } : g
+                          )
+                        )
+                      }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          setGroceryList(
+                            groceryList.map((g) =>
+                              g.id === item.id
+                                ? { ...g, editing: false, text: g.text.trim() }
+                                : g
+                            )
+                          );
+                        }
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: "6px",
+                        borderRadius: "6px",
+                        border: "1px solid #ccc"
+                      }}
+                    />
+                  ) : (
+                    /* Final text display */
+                    <span
+                      onClick={() =>
+                        setGroceryList(
+                          groceryList.map((g) =>
+                            g.id === item.id ? { ...g, editing: true } : g
+                          )
+                        )
+                      }
+                      style={{
+                        flex: 1,
+                        cursor: "pointer",
+                        textDecoration: item.checked ? "line-through" : "none"
+                      }}
+                    >
+                      {item.text || "Untitled"}
+                    </span>
+                  )}
+
+                  <button
+                    onClick={() =>
+                      setGroceryList(groceryList.filter((g) => g.id !== item.id))
+                    }
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "#888",
+                      fontSize: "18px"
+                    }}
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
 
           <div className="dash-recipes-card">
