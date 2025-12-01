@@ -53,8 +53,6 @@ function Dashboard() {
   const [loadingCategories, setLoadingCategories] = useState(true);
 
 
-const [currentPage, setCurrentPage] = useState("dashboard"); 
-
   useEffect(() => {
     const random =
       sampleAffirmations[Math.floor(Math.random() * sampleAffirmations.length)];
@@ -191,35 +189,35 @@ const [currentPage, setCurrentPage] = useState("dashboard");
               </select>
             </div>
 
-<div className="dash-add-field dash-add-field-wide">
-  <label>Title</label>
+            <div className="dash-add-field dash-add-field-wide">
+              <label>Title</label>
 
-  {newEventType === "gym" ? (
-    <select
-      value={newEventTitle}
-      onChange={(e) => setNewEventTitle(e.target.value)}
-    >
-      <option value="">Select exercise category</option>
+              {newEventType === "gym" ? (
+                <select
+                  value={newEventTitle}
+                  onChange={(e) => setNewEventTitle(e.target.value)}
+                >
+                  <option value="">Select exercise category</option>
 
-      {loadingCategories ? (
-        <option>Loading...</option>
-      ) : (
-        exerciseCategories.map((cat) => (
-          <option key={cat.id} value={cat.name}>
-            {cat.name}
-          </option>
-        ))
-      )}
-    </select>
-  ) : (
-    <input
-      type="text"
-      placeholder="Meal prep, study, etc."
-      value={newEventTitle}
-      onChange={(e) => setNewEventTitle(e.target.value)}
-    />
-  )}
-</div>
+                  {loadingCategories ? (
+                    <option>Loading...</option>
+                  ) : (
+                    exerciseCategories.map((cat) => (
+                      <option key={cat.id} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))
+                  )}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  placeholder="Meal prep, study, etc."
+                  value={newEventTitle}
+                  onChange={(e) => setNewEventTitle(e.target.value)}
+                />
+              )}
+            </div>
 
             <button type="submit" className="dash-add-btn">
               Add to week
