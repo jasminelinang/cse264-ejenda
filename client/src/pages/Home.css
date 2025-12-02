@@ -21,10 +21,10 @@ body {
 
 .home {
   overflow-x: hidden;
-  padding-top: 100px; /* Account for fixed header */
+  padding-top: 100px; 
 }
 
-/* === HEADER === */
+
 .header {
   position: fixed;
   top: 0;
@@ -37,7 +37,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 3rem;
-  z-index: 100;
+  z-index: 10000; 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -61,31 +61,34 @@ body {
   opacity: 0.8;
 }
 
-/* === HERO === */
 .hero {
   position: relative;
   width: 100%;
-  height: auto;
+  height: 80vh;
   overflow: hidden;
-
 }
 
 .hero-img {
   width: 100%;
-  height: auto;
-  transform: scaleX(-1);
-  object-fit: contain;
+  height: 100%;
+  transform: scaleX(-1); 
+  object-fit: cover; 
   object-position: center;
-  
+  z-index: 0;
 }
 
 .hero-overlay {
   position: absolute;
-  top: 30%;
-  left: 20%;
+  top: 40%;
+  right: 45%;
+  left: auto;
   font-size: 40px;
   color: #254441;
   text-align: left;
+  /* background: rgba(255, 255, 255, 0.7);
+  padding: 1.5rem 2rem; */
+  border-radius: 12px;
+  z-index: 1;
 }
 
 .hero-overlay h1 {
@@ -99,7 +102,7 @@ body {
   font-weight: 500;
 }
 
-/* === CONTENT WRAPPER === */
+
 .content-wrapper {
   max-width: 1200px;
   margin: 6rem auto;
@@ -111,7 +114,6 @@ body {
   align-items: center;
 }
 
-/* === COLORED BACKGROUNDS === */
 .yellow {
   background-color: var(--yellow);
 }
@@ -126,14 +128,10 @@ body {
   color: var(--yellow);
 }
 
-/* === ABOUT SECTION === */
 .about {
   position: relative;
   padding: 4rem 2rem;
   background-color: var(--white);
-}
-
-.about {
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -145,7 +143,6 @@ body {
   position: relative;
 }
 
-/* Image wrapper - left side */
 .about-img {
   position: relative;
   z-index: 2;
@@ -155,9 +152,9 @@ body {
   object-fit: cover;
   display: block;
   margin-left: -30%;
+  pointer-events: none;
 }
 
-/* Yellow container - right side */
 .content-wrapper.yellow {
   position: absolute;
   right: 0;
@@ -181,6 +178,8 @@ body {
 
 .about-text {
   width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
 .about-text h2 {
@@ -211,6 +210,7 @@ body {
   color: var(--green);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  z-index: 3;
 }
 
 .about-text button:hover {
@@ -219,7 +219,6 @@ body {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* === WHY EJENDA === */
 .why-inner {
   display: flex;
   align-items: center;
@@ -245,7 +244,6 @@ body {
   line-height: 1.6;
 }
 
-/* === MEAL PREP SECTION === */
 .meal-inner {
   display: flex;
   align-items: center;
@@ -271,18 +269,26 @@ body {
   line-height: 1.6;
 }
 
-/* === RESPONSIVE === */
+/*scroll animation*/
+.anim-child, .fade-section {
+  opacity: 0;
+  transform: translateY(80px);
+  will-change: opacity, transform;
+}
+
+section {
+  padding: 80px 0;
+}
+
 @media (max-width: 968px) {
   .about {
     padding: 2rem 1rem;
   }
 
   .about-img {
-    position: relative;
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
-    display: block;
   }
 
   .content-wrapper.yellow {
@@ -307,16 +313,15 @@ body {
   }
 
   .hero-overlay {
-    left: 10%;
+    right: 5%;
+    left: auto;
+    top: 20%;
+    font-size: 30px;
+    padding: 1rem 1.5rem;
   }
 
   .hero-overlay h1 {
     font-size: 3rem;
-  }
-
-  .content-wrapper {
-    margin: 4rem auto;
-    padding: 2rem;
   }
 }
 
@@ -353,39 +358,4 @@ body {
   .content-wrapper.yellow {
     padding: 4rem 1.5rem 2.5rem 1.5rem;
   }
-}
-.signup-btn {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #ffffff; 
-  color: black;
-  border-radius: 8px;
-  font-weight: bold;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.signup-btn:hover {
-  opacity: 0.9;
-}
-
-/* make sure the yellow card and its contents sit ABOVE the image */
-.about {
-  position: relative;
-}
-
-.about-img {
-  pointer-events: none;      /* image will no longer steal clicks */
-}
-
-/* make sure the text + button are clickable and above everything */
-.about-text {
-  position: relative;
-  z-index: 2;
-}
-
-.about-text button {
-  position: relative;
-  z-index: 3;
-  cursor: pointer;
 }
