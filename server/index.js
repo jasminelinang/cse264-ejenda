@@ -5,7 +5,7 @@ const sql = require("./db");
 require("dotenv").config();
 
 const authRoutes = require("./authRoutes");
-const eventsRoutes = require("./eventsRoutes"); // 👈 make sure this filename exists
+const eventsRoutes = require("./eventsRoutes");
 const adminRoutes = require("./adminRoutes");
 
 const app = express();
@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 
 // AUTH ROUTES and EVENT ROUTES
 app.use("/api/auth", authRoutes);
-app.use("/api", eventsRoutes);   // 👈 this now matches the const above
+app.use("/api", eventsRoutes);   
 app.use("/api/admin", adminRoutes);
 
 // DB TEST ROUTE
