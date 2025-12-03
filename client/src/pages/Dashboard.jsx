@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import "./Dashboard.css";
 import LogoutButton from "./LogoutButton.jsx";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE = "http://localhost:3000"; 
+
 const days = ["S", "M", "T", "W", "Th", "F", "Sa"];
 
 const sampleAffirmations = [
@@ -13,15 +14,30 @@ const sampleAffirmations = [
 ];
 
 function Dashboard() {
+  const navigate = useNavigate();
+
   const storedName =
     localStorage.getItem("ejenda_name") ||
     localStorage.getItem("ejenda_user_name") ||
     "Friend";
 
   const [affirmation, setAffirmation] = useState(sampleAffirmations[0]);
-  const [groceryList, setGroceryList] = useState([]);
-  const [nextId, setNextId] = useState(1);
-  const [events, setEvents] = useState([]); 
+
+  // Load groceryList from localStorage
+  const [groceryList, setGroceryList] = useState(() => {
+    const saved = localStorage.getItem("dashboard_grocery");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [nextId, setNextId] = useState(
+    groceryList.length > 0 ? Math.max(...groceryList.map(i => i.id)) + 1 : 1
+  );
+
+  // Load events from localStorage
+  const [events, setEvents] = useState(() => {
+    const saved = localStorage.getItem("dashboard_events");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const [newEventDay, setNewEventDay] = useState("M");
   const [newEventTitle, setNewEventTitle] = useState("");
@@ -31,6 +47,14 @@ function Dashboard() {
   const [loadingCategories, setLoadingCategories] = useState(true);
 
   const [weeklyRecipes, setWeeklyRecipes] = useState([]);
+
+  useEffect(() => {
+    localStorage.setItem("dashboard_grocery", JSON.stringify(groceryList));
+  }, [groceryList]);
+
+  useEffect(() => {
+    localStorage.setItem("dashboard_events", JSON.stringify(events));
+  }, [events]);
 
   useEffect(() => {
     const random =
@@ -58,9 +82,11 @@ function Dashboard() {
     async function loadOrRefreshWeeklyMeals() {
       const saved = localStorage.getItem("weekly_meals");
       const savedTime = localStorage.getItem("weekly_meals_timestamp");
+
       if (saved && savedTime) {
         const age = Date.now() - Number(savedTime);
         const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
         if (age < sevenDays) {
           setWeeklyRecipes(JSON.parse(saved));
           return;
@@ -78,6 +104,7 @@ function Dashboard() {
 
       localStorage.setItem("weekly_meals", JSON.stringify(recipes));
       localStorage.setItem("weekly_meals_timestamp", Date.now().toString());
+
       setWeeklyRecipes(recipes);
     }
 
@@ -86,6 +113,7 @@ function Dashboard() {
 
   async function refreshWeeklyMeals() {
     const recipes = [];
+
     for (let i = 0; i < 2; i++) {
       const res = await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
       const data = await res.json();
@@ -94,6 +122,7 @@ function Dashboard() {
 
     localStorage.setItem("weekly_meals", JSON.stringify(recipes));
     localStorage.setItem("weekly_meals_timestamp", Date.now().toString());
+
     setWeeklyRecipes(recipes);
   }
 
@@ -127,19 +156,18 @@ function Dashboard() {
         <div className="dash-welcome">
           <p className="dash-welcome-label">Welcome back,</p>
           <p className="dash-welcome-name">{storedName}</p>
+
           <LogoutButton />
         </div>
 
         <nav className="dash-nav">
-          <span className="dash-nav-item dash-nav-active">
-            <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
-              Dashboard
-            </Link>
-          </span>
-          <span className="dash-nav-item">
-            <Link to="/settings" style={{ color: "inherit", textDecoration: "none" }}>
-              Settings
-            </Link>
+          <span className="dash-nav-item dash-nav-active">Dashboard</span>
+          {/* Settings navigation */}
+          <span
+            className="dash-nav-item"
+            onClick={() => navigate("/settings")}
+          >
+            Settings
           </span>
         </nav>
       </aside>
@@ -188,7 +216,7 @@ function Dashboard() {
             ))}
           </div>
 
-          {/* Add event form */}
+          {/* add event form */}
           <form className="dash-add-form" onSubmit={handleAddEvent}>
             <div className="dash-add-field">
               <label>Day</label>
@@ -197,7 +225,9 @@ function Dashboard() {
                 onChange={(e) => setNewEventDay(e.target.value)}
               >
                 {days.map((d) => (
-                  <option key={d} value={d}>{d}</option>
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
                 ))}
               </select>
             </div>
@@ -216,17 +246,21 @@ function Dashboard() {
 
             <div className="dash-add-field dash-add-field-wide">
               <label>Title</label>
+
               {newEventType === "gym" ? (
                 <select
                   value={newEventTitle}
                   onChange={(e) => setNewEventTitle(e.target.value)}
                 >
                   <option value="">Select exercise category</option>
+
                   {loadingCategories ? (
                     <option>Loading...</option>
                   ) : (
                     exerciseCategories.map((cat) => (
-                      <option key={cat.id} value={cat.name}>{cat.name}</option>
+                      <option key={cat.id} value={cat.name}>
+                        {cat.name}
+                      </option>
                     ))
                   )}
                 </select>
@@ -246,14 +280,17 @@ function Dashboard() {
           </form>
         </section>
 
-        {/* Grocery + recipes */}
+        {/* Grocery + Recipes */}
         <section className="dash-bottom-row">
           <div className="dash-grocery-card" style={{ position: "relative" }}>
             <h3 style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               Grocery List
               <button
                 onClick={() => {
-                  setGroceryList([...groceryList, { id: nextId, text: "", checked: false, editing: true }]);
+                  setGroceryList([
+                    ...groceryList,
+                    { id: nextId, text: "", checked: false, editing: true }
+                  ]);
                   setNextId(nextId + 1);
                 }}
                 style={{
@@ -275,14 +312,24 @@ function Dashboard() {
 
             <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
               {groceryList.map((item) => (
-                <li key={item.id} style={{ display: "flex", alignItems: "center", marginBottom: "8px", gap: "8px" }}>
+                <li
+                  key={item.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "8px",
+                    gap: "8px"
+                  }}
+                >
                   <input
                     type="checkbox"
                     checked={item.checked}
                     onChange={() =>
-                      setGroceryList(groceryList.map((g) =>
-                        g.id === item.id ? { ...g, checked: !g.checked } : g
-                      ))
+                      setGroceryList(
+                        groceryList.map((g) =>
+                          g.id === item.id ? { ...g, checked: !g.checked } : g
+                        )
+                      )
                     }
                   />
 
@@ -293,35 +340,60 @@ function Dashboard() {
                       autoFocus
                       placeholder="New item..."
                       onChange={(e) =>
-                        setGroceryList(groceryList.map((g) =>
-                          g.id === item.id ? { ...g, text: e.target.value } : g
-                        ))
+                        setGroceryList(
+                          groceryList.map((g) =>
+                            g.id === item.id ? { ...g, text: e.target.value } : g
+                          )
+                        )
                       }
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                          setGroceryList(groceryList.map((g) =>
-                            g.id === item.id ? { ...g, editing: false, text: g.text.trim() } : g
-                          ));
+                          setGroceryList(
+                            groceryList.map((g) =>
+                              g.id === item.id
+                                ? { ...g, editing: false, text: g.text.trim() }
+                                : g
+                            )
+                          );
                         }
                       }}
-                      style={{ flex: 1, padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }}
+                      style={{
+                        flex: 1,
+                        padding: "6px",
+                        borderRadius: "6px",
+                        border: "1px solid #ccc"
+                      }}
                     />
                   ) : (
                     <span
                       onClick={() =>
-                        setGroceryList(groceryList.map((g) =>
-                          g.id === item.id ? { ...g, editing: true } : g
-                        ))
+                        setGroceryList(
+                          groceryList.map((g) =>
+                            g.id === item.id ? { ...g, editing: true } : g
+                          )
+                        )
                       }
-                      style={{ flex: 1, cursor: "pointer", textDecoration: item.checked ? "line-through" : "none" }}
+                      style={{
+                        flex: 1,
+                        cursor: "pointer",
+                        textDecoration: item.checked ? "line-through" : "none"
+                      }}
                     >
                       {item.text || "Untitled"}
                     </span>
                   )}
 
                   <button
-                    onClick={() => setGroceryList(groceryList.filter((g) => g.id !== item.id))}
-                    style={{ background: "transparent", border: "none", cursor: "pointer", color: "#888", fontSize: "18px" }}
+                    onClick={() =>
+                      setGroceryList(groceryList.filter((g) => g.id !== item.id))
+                    }
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "#888",
+                      fontSize: "18px"
+                    }}
                   >
                     ✕
                   </button>
@@ -338,19 +410,40 @@ function Dashboard() {
               ) : (
                 weeklyRecipes.map(meal => (
                   <div key={meal.idMeal} className="dash-recipe-item">
-                    <img src={meal.strMealThumb} alt={meal.strMeal} className="dash-recipe-image" />
+                    <img 
+                      src={meal.strMealThumb} 
+                      alt={meal.strMeal} 
+                      className="dash-recipe-image" 
+                    />
                     <div className="dash-recipe-info">
                       <div className="dash-recipe-name">{meal.strMeal}</div>
-                      <div className="dash-recipe-meta">Category: {meal.strCategory || "N/A"}</div>
+                      <div className="dash-recipe-meta">
+                        Category: {meal.strCategory || "N/A"}
+                      </div>
                       <div className="dash-recipe-ingredients">
-                        Ingredients: {[meal.strIngredient1, meal.strIngredient2, meal.strIngredient3, meal.strIngredient4].filter(Boolean).join(", ")}
+                        Ingredients: {
+                          [
+                            meal.strIngredient1,
+                            meal.strIngredient2,
+                            meal.strIngredient3,
+                            meal.strIngredient4
+                          ]
+                            .filter(Boolean)
+                            .join(", ")
+                        }
                       </div>
                     </div>
                   </div>
                 ))
               )}
             </div>
-            <button onClick={refreshWeeklyMeals} className="refresh-btn">Refresh Weekly Meals</button>
+
+            <button 
+              onClick={refreshWeeklyMeals}
+              className="refresh-btn"
+            >
+              Refresh Weekly Meals
+            </button>
           </div>
         </section>
       </main>
