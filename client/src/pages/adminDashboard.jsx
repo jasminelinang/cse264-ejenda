@@ -251,7 +251,7 @@ export default function AdminDashboard() {
                   <button onClick={() => toggleUser(user.id)}>
                     {expandedUser === user.id ? "▲" : "▼"}
                   </button>
-                  <button onClick={() => inspectCalendar(user.id)}>Calendar</button>
+                 {/* <button onClick={() => inspectCalendar(user.id)}>Calendar</button> */}
                   <button onClick={() => deleteUser(user.id)}>Delete</button>
                 </div>
               </div>
