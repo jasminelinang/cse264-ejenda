@@ -99,11 +99,13 @@
 // }
 
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; //
 import "./adminDashboard.css";
 
 const API_BASE = "http://localhost:3000"; // backend URL
 
 export default function AdminDashboard() {
+    const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [expandedUser, setExpandedUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -119,10 +121,16 @@ export default function AdminDashboard() {
     setLoading(true);
     setError(null);
 
+    const token = localStorage.getItem("ejenda_token"); // get JWT from localStorage
+    if (!token) {
+      setError("Missing token. Please log in again.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch(`${API_BASE}/api/admin/users`, {
-        credentials: "include", // 👈 send cookies if using session auth
-        // headers: { Authorization: `Bearer ${token}` }, // 👈 use if JWT
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) {
@@ -131,11 +139,7 @@ export default function AdminDashboard() {
       }
 
       const data = await res.json();
-
-      if (!Array.isArray(data)) {
-        throw new Error("Unexpected data format from server");
-      }
-
+      if (!Array.isArray(data)) throw new Error("Unexpected data format");
       setUsers(data);
     } catch (err) {
       console.error("Error loading users:", err);
@@ -148,18 +152,23 @@ export default function AdminDashboard() {
 
   // Expand/collapse user details
   function toggleUser(id) {
-    setExpandedUser((prev) => (prev === id ? null : id));
+    setExpandedUser(prev => (prev === id ? null : id));
   }
 
   // Delete a user
   async function deleteUser(id) {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Missing token. Please log in again.");
+      return;
+    }
+
     try {
       const res = await fetch(`${API_BASE}/api/admin/users/${id}`, {
         method: "DELETE",
-        credentials: "include",
-        // headers: { Authorization: `Bearer ${token}` }, // JWT if used
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) {
@@ -167,8 +176,7 @@ export default function AdminDashboard() {
         throw new Error(errData.error || "Failed to delete user");
       }
 
-      // Remove user from state
-      setUsers((prev) => prev.filter((u) => u.id !== id));
+      setUsers(prev => prev.filter(u => u.id !== id));
     } catch (err) {
       console.error("Delete error:", err);
       alert("Failed to delete user: " + err.message);
@@ -177,9 +185,15 @@ export default function AdminDashboard() {
 
   // Inspect a user's calendar
   async function inspectCalendar(id) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Missing token. Please log in again.");
+      return;
+    }
+
     try {
       const res = await fetch(`${API_BASE}/api/admin/calendar/${id}`, {
-        credentials: "include",
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) {
@@ -201,6 +215,23 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin-dashboard">
+        {/* Back button */}
+      <button
+        onClick={() => navigate("/dashboard")}
+        className="admin-back-btn"
+        style={{
+          marginBottom: "20px",
+          padding: "8px 12px",
+          background: "#ffb703",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer",
+          color: "#fff",
+          fontWeight: "600"
+        }}
+      >
+        ← Back to Dashboard
+      </button>
       <h1>Admin Dashboard</h1>
       <p className="admin-subtitle">Manage all registered users</p>
 
@@ -208,7 +239,7 @@ export default function AdminDashboard() {
         <p>No users found.</p>
       ) : (
         <div className="admin-user-list">
-          {users.map((user) => (
+          {users.map(user => (
             <div key={user.id} className="admin-user-card">
               <div className="admin-user-header">
                 <div>
@@ -232,6 +263,10 @@ export default function AdminDashboard() {
                   <p><strong>Role:</strong> {user.role}</p>
                   <p><strong>Created:</strong> {user.created_at || "N/A"}</p>
                   <p><strong>Last Login:</strong> {user.last_login || "N/A"}</p>
+                  {user.height && <p><strong>Height:</strong> {user.height}</p>}
+                  {user.weight && <p><strong>Weight:</strong> {user.weight}</p>}
+                  {user.fitness_goal && <p><strong>Fitness Goal:</strong> {user.fitness_goal}</p>}
+                  {user.diet_prefs && <p><strong>Diet Preferences:</strong> {user.diet_prefs}</p>}
                 </div>
               )}
             </div>

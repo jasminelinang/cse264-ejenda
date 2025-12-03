@@ -21,6 +21,8 @@ function Dashboard() {
     localStorage.getItem("ejenda_user_name") ||
     "Friend";
 
+const isAdmin = localStorage.getItem("ejenda_is_admin") === "true";
+
   const [affirmation, setAffirmation] = useState(sampleAffirmations[0]);
 
   // Load groceryList from localStorage
@@ -47,6 +49,7 @@ function Dashboard() {
   const [loadingCategories, setLoadingCategories] = useState(true);
 
   const [weeklyRecipes, setWeeklyRecipes] = useState([]);
+
 
   useEffect(() => {
     localStorage.setItem("dashboard_grocery", JSON.stringify(groceryList));
@@ -162,6 +165,17 @@ function Dashboard() {
 
         <nav className="dash-nav">
           <span className="dash-nav-item dash-nav-active">Dashboard</span>
+
+          {isAdmin && (
+            <span
+              className="dash-nav-item"
+              onClick={() => navigate("/admin-dashboard")}
+              style={{ color: "#ffb703", fontWeight: "600" }}
+            >
+              Admin Dashboard
+            </span>
+          )}
+          
           {/* Settings navigation */}
           <span
             className="dash-nav-item"

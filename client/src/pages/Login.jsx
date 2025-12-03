@@ -55,11 +55,15 @@ function Login() {
         return;
       }
 
-      if (data.token) {
+      //if (data.token) {
+          const { user, token } = data;
+
+        localStorage.setItem("ejenda_user_name", user.name);
+        localStorage.setItem("ejenda_is_admin", user.role === "admin");
+
         localStorage.setItem("ejenda_token", data.token);
         navigate("/dashboard");
-      }
-
+     // }
 
     } catch (err) {
       console.error(err);
