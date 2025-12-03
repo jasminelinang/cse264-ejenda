@@ -1,39 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./Dashboard.css";
-// Added
 import LogoutButton from "./LogoutButton.jsx";
 
-
 const API_BASE = "http://localhost:3000"; 
-
 const days = ["S", "M", "T", "W", "Th", "F", "Sa"];
 
 const sampleAffirmations = [
   "I am capable of achieving my goals.",
   "I honor my body by taking care of it.",
   "Small steps today create big results tomorrow.",
-
 ];
-
-
-// const sampleRecipes = [
-//   {
-//     id: 1,
-//     name: "Protein Pasta",
-//     time: "40 minutes",
-//     ingredients: "Chicken, pasta, broccoli, cheese",
-//     imageUrl:
-//       "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress",
-//   },
-//   {
-//     id: 2,
-//     name: "Overloaded Potatoes",
-//     time: "35 minutes",
-//     ingredients: "Potatoes, cheese, veggies",
-//     imageUrl:
-//       "https://images.pexels.com/photos/4106483/pexels-photo-4106483.jpeg?auto=compress",
-//   },
-// ];
 
 function Dashboard() {
   const storedName =
@@ -55,7 +32,6 @@ function Dashboard() {
 
   const [weeklyRecipes, setWeeklyRecipes] = useState([]);
 
-
   useEffect(() => {
     const random =
       sampleAffirmations[Math.floor(Math.random() * sampleAffirmations.length)];
@@ -63,71 +39,63 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-  async function loadCategories() {
-    try {
-      const res = await fetch("https://wger.de/api/v2/exercisecategory/");
-      const data = await res.json();
-      setExerciseCategories(data.results); // only broad categories
-    } catch (err) {
-      console.error("Failed to load gym categories", err);
-    } finally {
-      setLoadingCategories(false);
-    }
-  }
-
-  loadCategories();
-  }, []);
-
-  useEffect(() => {
-  async function loadOrRefreshWeeklyMeals() {
-    const saved = localStorage.getItem("weekly_meals");
-    const savedTime = localStorage.getItem("weekly_meals_timestamp");
-
-    // If we have saved meals AND timestamp is < 7 days old → reuse it
-    if (saved && savedTime) {
-      const age = Date.now() - Number(savedTime);
-      const sevenDays = 7 * 24 * 60 * 60 * 1000;
-
-      if (age < sevenDays) {
-        setWeeklyRecipes(JSON.parse(saved));
-        return; // 👍 skip fetching
+    async function loadCategories() {
+      try {
+        const res = await fetch("https://wger.de/api/v2/exercisecategory/");
+        const data = await res.json();
+        setExerciseCategories(data.results);
+      } catch (err) {
+        console.error("Failed to load gym categories", err);
+      } finally {
+        setLoadingCategories(false);
       }
     }
 
-    // Otherwise → fetch 3 new recipes
+    loadCategories();
+  }, []);
+
+  useEffect(() => {
+    async function loadOrRefreshWeeklyMeals() {
+      const saved = localStorage.getItem("weekly_meals");
+      const savedTime = localStorage.getItem("weekly_meals_timestamp");
+      if (saved && savedTime) {
+        const age = Date.now() - Number(savedTime);
+        const sevenDays = 7 * 24 * 60 * 60 * 1000;
+        if (age < sevenDays) {
+          setWeeklyRecipes(JSON.parse(saved));
+          return;
+        }
+      }
+
+      const recipes = [];
+      for (let i = 0; i < 2; i++) {
+        const res = await fetch(
+          "https://www.themealdb.com/api/json/v1/1/random.php"
+        );
+        const data = await res.json();
+        if (data.meals?.[0]) recipes.push(data.meals[0]);
+      }
+
+      localStorage.setItem("weekly_meals", JSON.stringify(recipes));
+      localStorage.setItem("weekly_meals_timestamp", Date.now().toString());
+      setWeeklyRecipes(recipes);
+    }
+
+    loadOrRefreshWeeklyMeals();
+  }, []);
+
+  async function refreshWeeklyMeals() {
     const recipes = [];
     for (let i = 0; i < 2; i++) {
-      const res = await fetch(
-        "https://www.themealdb.com/api/json/v1/1/random.php"
-      );
+      const res = await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
       const data = await res.json();
       if (data.meals?.[0]) recipes.push(data.meals[0]);
     }
 
-    // Save for next time
     localStorage.setItem("weekly_meals", JSON.stringify(recipes));
     localStorage.setItem("weekly_meals_timestamp", Date.now().toString());
-
     setWeeklyRecipes(recipes);
   }
-
-  loadOrRefreshWeeklyMeals();
-}, []);
-
-async function refreshWeeklyMeals() {
-  const recipes = [];
-
-  for (let i = 0; i < 2; i++) {
-    const res = await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
-    const data = await res.json();
-    if (data.meals?.[0]) recipes.push(data.meals[0]);
-  }
-
-  localStorage.setItem("weekly_meals", JSON.stringify(recipes));
-  localStorage.setItem("weekly_meals_timestamp", Date.now().toString());
-
-  setWeeklyRecipes(recipes);
-}
 
   const handleAddEvent = (e) => {
     e.preventDefault();
@@ -159,14 +127,20 @@ async function refreshWeeklyMeals() {
         <div className="dash-welcome">
           <p className="dash-welcome-label">Welcome back,</p>
           <p className="dash-welcome-name">{storedName}</p>
-
-          {/*logout*/}
           <LogoutButton />
         </div>
 
         <nav className="dash-nav">
-          <span className="dash-nav-item dash-nav-active">Dashboard</span>
-          <span className="dash-nav-item">Settings</span>
+          <span className="dash-nav-item dash-nav-active">
+            <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
+              Dashboard
+            </Link>
+          </span>
+          <span className="dash-nav-item">
+            <Link to="/settings" style={{ color: "inherit", textDecoration: "none" }}>
+              Settings
+            </Link>
+          </span>
         </nav>
       </aside>
 
@@ -214,7 +188,7 @@ async function refreshWeeklyMeals() {
             ))}
           </div>
 
-          {/* add event form */}
+          {/* Add event form */}
           <form className="dash-add-form" onSubmit={handleAddEvent}>
             <div className="dash-add-field">
               <label>Day</label>
@@ -223,9 +197,7 @@ async function refreshWeeklyMeals() {
                 onChange={(e) => setNewEventDay(e.target.value)}
               >
                 {days.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
+                  <option key={d} value={d}>{d}</option>
                 ))}
               </select>
             </div>
@@ -244,21 +216,17 @@ async function refreshWeeklyMeals() {
 
             <div className="dash-add-field dash-add-field-wide">
               <label>Title</label>
-
               {newEventType === "gym" ? (
                 <select
                   value={newEventTitle}
                   onChange={(e) => setNewEventTitle(e.target.value)}
                 >
                   <option value="">Select exercise category</option>
-
                   {loadingCategories ? (
                     <option>Loading...</option>
                   ) : (
                     exerciseCategories.map((cat) => (
-                      <option key={cat.id} value={cat.name}>
-                        {cat.name}
-                      </option>
+                      <option key={cat.id} value={cat.name}>{cat.name}</option>
                     ))
                   )}
                 </select>
@@ -277,18 +245,15 @@ async function refreshWeeklyMeals() {
             </button>
           </form>
         </section>
-        
-        {/* grocery + recipes */}
+
+        {/* Grocery + recipes */}
         <section className="dash-bottom-row">
           <div className="dash-grocery-card" style={{ position: "relative" }}>
             <h3 style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               Grocery List
               <button
                 onClick={() => {
-                  setGroceryList([
-                    ...groceryList,
-                    { id: nextId, text: "", checked: false, editing: true }
-                  ]);
+                  setGroceryList([...groceryList, { id: nextId, text: "", checked: false, editing: true }]);
                   setNextId(nextId + 1);
                 }}
                 style={{
@@ -310,28 +275,17 @@ async function refreshWeeklyMeals() {
 
             <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
               {groceryList.map((item) => (
-                <li
-                  key={item.id}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "8px",
-                    gap: "8px"
-                  }}
-                >
+                <li key={item.id} style={{ display: "flex", alignItems: "center", marginBottom: "8px", gap: "8px" }}>
                   <input
                     type="checkbox"
                     checked={item.checked}
                     onChange={() =>
-                      setGroceryList(
-                        groceryList.map((g) =>
-                          g.id === item.id ? { ...g, checked: !g.checked } : g
-                        )
-                      )
+                      setGroceryList(groceryList.map((g) =>
+                        g.id === item.id ? { ...g, checked: !g.checked } : g
+                      ))
                     }
                   />
 
-                  {/* If editing, show input box */}
                   {item.editing ? (
                     <input
                       type="text"
@@ -339,61 +293,35 @@ async function refreshWeeklyMeals() {
                       autoFocus
                       placeholder="New item..."
                       onChange={(e) =>
-                        setGroceryList(
-                          groceryList.map((g) =>
-                            g.id === item.id ? { ...g, text: e.target.value } : g
-                          )
-                        )
+                        setGroceryList(groceryList.map((g) =>
+                          g.id === item.id ? { ...g, text: e.target.value } : g
+                        ))
                       }
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                          setGroceryList(
-                            groceryList.map((g) =>
-                              g.id === item.id
-                                ? { ...g, editing: false, text: g.text.trim() }
-                                : g
-                            )
-                          );
+                          setGroceryList(groceryList.map((g) =>
+                            g.id === item.id ? { ...g, editing: false, text: g.text.trim() } : g
+                          ));
                         }
                       }}
-                      style={{
-                        flex: 1,
-                        padding: "6px",
-                        borderRadius: "6px",
-                        border: "1px solid #ccc"
-                      }}
+                      style={{ flex: 1, padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }}
                     />
                   ) : (
-                    /* Final text display */
                     <span
                       onClick={() =>
-                        setGroceryList(
-                          groceryList.map((g) =>
-                            g.id === item.id ? { ...g, editing: true } : g
-                          )
-                        )
+                        setGroceryList(groceryList.map((g) =>
+                          g.id === item.id ? { ...g, editing: true } : g
+                        ))
                       }
-                      style={{
-                        flex: 1,
-                        cursor: "pointer",
-                        textDecoration: item.checked ? "line-through" : "none"
-                      }}
+                      style={{ flex: 1, cursor: "pointer", textDecoration: item.checked ? "line-through" : "none" }}
                     >
                       {item.text || "Untitled"}
                     </span>
                   )}
 
                   <button
-                    onClick={() =>
-                      setGroceryList(groceryList.filter((g) => g.id !== item.id))
-                    }
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      cursor: "pointer",
-                      color: "#888",
-                      fontSize: "18px"
-                    }}
+                    onClick={() => setGroceryList(groceryList.filter((g) => g.id !== item.id))}
+                    style={{ background: "transparent", border: "none", cursor: "pointer", color: "#888", fontSize: "18px" }}
                   >
                     ✕
                   </button>
@@ -402,78 +330,27 @@ async function refreshWeeklyMeals() {
             </ul>
           </div>
 
-          {/* <div className="dash-recipes-card">
-            <h3>This week&apos;s recipes:</h3>
-            <div className="dash-recipe-list">
-              {sampleRecipes.map((r) => (
-                <div key={r.id} className="dash-recipe-item">
-                  <img
-                    src={r.imageUrl}
-                    alt={r.name}
-                    className="dash-recipe-image"
-                  />
-                  <div className="dash-recipe-info">
-                    <div className="dash-recipe-name">{r.name}</div>
-                    <div className="dash-recipe-meta">
-                      Estimated time: {r.time}
-                    </div>
-                    <div className="dash-recipe-ingredients">
-                      Ingredients: {r.ingredients}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div> */}
-
           <div className="dash-recipes-card">
             <h3>This week's recipes:</h3>
             <div className="dash-recipe-list">
-
               {weeklyRecipes.length === 0 ? (
                 <p>Loading recipes...</p>
               ) : (
                 weeklyRecipes.map(meal => (
                   <div key={meal.idMeal} className="dash-recipe-item">
-                    
-                    <img 
-                      src={meal.strMealThumb} 
-                      alt={meal.strMeal} 
-                      className="dash-recipe-image" 
-                    />
-
+                    <img src={meal.strMealThumb} alt={meal.strMeal} className="dash-recipe-image" />
                     <div className="dash-recipe-info">
                       <div className="dash-recipe-name">{meal.strMeal}</div>
-
-                      <div className="dash-recipe-meta">
-                        Category: {meal.strCategory || "N/A"}
-                      </div>
-
+                      <div className="dash-recipe-meta">Category: {meal.strCategory || "N/A"}</div>
                       <div className="dash-recipe-ingredients">
-                        Ingredients: {
-                          [
-                            meal.strIngredient1,
-                            meal.strIngredient2,
-                            meal.strIngredient3,
-                            meal.strIngredient4
-                          ]
-                            .filter(Boolean)
-                            .join(", ")
-                        }
+                        Ingredients: {[meal.strIngredient1, meal.strIngredient2, meal.strIngredient3, meal.strIngredient4].filter(Boolean).join(", ")}
                       </div>
                     </div>
                   </div>
                 ))
               )}
-
             </div>
-
-          <button 
-            onClick={refreshWeeklyMeals}
-            className="refresh-btn"
-          >
-            Refresh Weekly Meals
-          </button>
+            <button onClick={refreshWeeklyMeals} className="refresh-btn">Refresh Weekly Meals</button>
           </div>
         </section>
       </main>
