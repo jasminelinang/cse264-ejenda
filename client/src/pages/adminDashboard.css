@@ -1,0 +1,78 @@
+.admin-dashboard {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.admin-subtitle {
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.admin-user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-user-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.admin-user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f9f9f9;
+}
+
+.admin-btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-toggle-btn,
+.admin-inspect-btn,
+.admin-delete-btn {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.admin-toggle-btn {
+  background: #e0e0e0;
+}
+
+.admin-inspect-btn {
+  background: #ffd447;
+}
+
+.admin-delete-btn {
+  background: #ff7070;
+  color: white;
+}
+
+.admin-user-details {
+  padding: 1rem;
+  background: #fafafa;
+  border-top: 1px solid #eee;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.admin-loading {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1.1rem;
+}

@@ -37,20 +37,23 @@ router.post("/signup", async (req, res) => {
     const parsedHeight = height ? parseInt(height, 10) : null;
     const parsedWeight = weight ? parseInt(weight, 10) : null;
 
+    // default role = "user" unless explicitly set
+    const assignedRole = role || "user";
+
     const inserted = await sql`
       INSERT INTO users
-        (name, email, password_hash, height, weight, fitness_goal, diet_prefs)
+        (name, email, password_hash, height, weight, fitness_goal, diet_prefs, role)
       VALUES
         (${name}, ${email}, ${passwordHash},
-         ${parsedHeight}, ${parsedWeight}, ${fitnessGoal}, ${dietPrefs})
+         ${parsedHeight}, ${parsedWeight}, ${fitnessGoal}, ${dietPrefs}, ${assignedRole})
       RETURNING
-        id, name, email, height, weight, fitness_goal, diet_prefs, created_at
+        id, name, email, height, weight, fitness_goal, diet_prefs, role, created_at
     `;
 
     const user = inserted[0];
 
     const token = jwt.sign(
-      { userId: user.id },
+      { userId: user.id, role: user.role },
       process.env.JWT_SECRET || "dev-secret",
       { expiresIn: "7d" }
     );
@@ -73,7 +76,7 @@ router.post("/login", async (req, res) => {
   try {
     const users = await sql`
       SELECT id, name, email, password_hash,
-             height, weight, fitness_goal, diet_prefs
+             height, weight, fitness_goal, diet_prefs, role
       FROM users
       WHERE email = ${email}
     `;
@@ -90,7 +93,7 @@ router.post("/login", async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user.id },
+      { userId: user.id, role: user.role },
       process.env.JWT_SECRET || "dev-secret",
       { expiresIn: "7d" }
     );

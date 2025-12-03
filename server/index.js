@@ -6,10 +6,14 @@ require("dotenv").config();
 
 const authRoutes = require("./authRoutes");
 const eventsRoutes = require("./eventsRoutes"); // 👈 make sure this filename exists
+const adminRoutes = require("./adminRoutes");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5174",  // your React frontend origin
+  credentials: true                 // allow cookies to be sent
+}));
 
 // ROOT ROUTE
 app.get("/", (req, res) => {
@@ -19,6 +23,7 @@ app.get("/", (req, res) => {
 // AUTH ROUTES and EVENT ROUTES
 app.use("/api/auth", authRoutes);
 app.use("/api", eventsRoutes);   // 👈 this now matches the const above
+app.use("/api/admin", adminRoutes);
 
 // DB TEST ROUTE
 app.get("/test", async (req, res) => {
@@ -35,3 +40,4 @@ app.get("/test", async (req, res) => {
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
+
