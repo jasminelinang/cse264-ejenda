@@ -38,7 +38,7 @@ router.post("/signup", async (req, res) => {
     const parsedWeight = weight ? parseInt(weight, 10) : null;
 
     // default role = "user" unless explicitly set
-    const assignedRole = role || "user";
+    const assignedRole = "user";
 
     const inserted = await sql`
       INSERT INTO users

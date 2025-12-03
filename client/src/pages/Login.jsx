@@ -29,10 +29,14 @@ function Login() {
 
     try {
       const endpoint = isLogin ? "login" : "signup";
+      const url = `${API_BASE}/api/auth/${endpoint}`;
+      console.log("Submitting auth request to:", url);
 
-      const res = await fetch(`${API_BASE}/api/auth/${endpoint}`, {
+      const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+
+        credentials: "include",
         body: JSON.stringify(
           isLogin
             ? { email, password }
@@ -48,26 +52,51 @@ function Login() {
         ),
       });
 
-      const data = await res.json();
+      console.log("fetch status:", res.status, res.statusText);
+
+      // Try to parse JSON, but handle non-JSON gracefully
+      let data = null;
+      try {
+        // If server returns empty body or non-json, this will throw
+        data = await res.json();
+      } catch (jsonErr) {
+        console.warn("Response not JSON or empty body", jsonErr);
+      }
+
+      console.log("response body:", data);
 
       if (!res.ok) {
-        setError(data.error || "Something went wrong");
+        // Prefer server-provided error message, otherwise fallback
+        const serverMsg = data && (data.error || data.message);
+        setError(serverMsg || `Request failed: ${res.status} ${res.statusText}`);
         return;
       }
 
-      //if (data.token) {
-          const { user, token } = data;
+      // Success: check for user & token in response
+      if (data) {
+        const { user, token } = data;
 
-        localStorage.setItem("ejenda_user_name", user.name);
-        localStorage.setItem("ejenda_is_admin", user.role === "admin");
+        if (user) {
+          localStorage.setItem("ejenda_user_name", user.name || "");
+          localStorage.setItem("ejenda_is_admin", user.role === "admin");
+        }
 
-        localStorage.setItem("ejenda_token", data.token);
+        if (token) {
+          localStorage.setItem("ejenda_token", token);
+        }
+
+        setMessage(isLogin ? "Logged in successfully." : "Account created.");
+        // small delay can help let UI show message; optional
         navigate("/dashboard");
-     // }
+        return;
+      }
 
+      // If we got here, server responded ok but no JSON payload
+      setMessage("Success (no JSON body returned). Redirecting...");
+      navigate("/dashboard");
     } catch (err) {
-      console.error(err);
-      setError("Network error");
+      console.error("Network / fetch error:", err);
+      setError("Network error — check server is running and accessible at " + API_BASE);
     }
   };
 
@@ -186,8 +215,7 @@ function Login() {
                   <option value="dairy free">Dairy-free</option>
                   <option value="nut allergy">Nut allergy</option>
                   <option value="shellfish allergy">Shellfish allergy</option>
-                   <option value="halal">Halal</option>
-
+                  <option value="halal">Halal</option>
                 </select>
               </div>
             </>
