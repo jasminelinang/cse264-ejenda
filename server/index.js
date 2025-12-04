@@ -68,7 +68,7 @@ app.get("/test", async (req, res) => {
   }
 });
 
-// optional quick ping to verify server reachability
+//quick ping to verify server reachability
 app.get("/ping", (req, res) => {
   res.send("pong");
 });
