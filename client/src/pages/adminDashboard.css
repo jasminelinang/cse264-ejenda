@@ -6,7 +6,7 @@
 }
 
 .admin-subtitle {
-  color: #555;
+  color: #4f4e4e;
   margin-bottom: 1.5rem;
 }
 
@@ -17,10 +17,10 @@
 }
 
 .admin-user-card {
-  border: 1px solid #ddd;
+  border: 1px solid #dfdede;
   border-radius: 10px;
   overflow: hidden;
-  background: #fff;
+  background: #ffffff;
 }
 
 .admin-user-header {
@@ -28,7 +28,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: #f9f9f9;
+  background: #fcfcfc;
 }
 
 .admin-btn-group {
@@ -47,22 +47,22 @@
 }
 
 .admin-toggle-btn {
-  background: #e0e0e0;
+  background: #e1e0e0;
 }
 
 .admin-inspect-btn {
-  background: #ffd447;
+  background: #fed347;
 }
 
 .admin-delete-btn {
-  background: #ff7070;
+  background: #fa6d6d;
   color: white;
 }
 
 .admin-user-details {
   padding: 1rem;
-  background: #fafafa;
-  border-top: 1px solid #eee;
+  background: #f5f3f3;
+  border-top: 1px solid #eeeeee;
   animation: fadeIn 0.25s ease-in-out;
 }
 

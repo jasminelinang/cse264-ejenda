@@ -402,7 +402,7 @@
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
-  margin-top: 1rem; /* optional: spacing from recipe list above */
+  margin-top: 1rem; 
 }
 
 .refresh-btn:hover {
