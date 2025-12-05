@@ -68,8 +68,8 @@ This workflow allows users to manage daily tasks in a clean and centralized syst
 
 1. Clone the repository:  
    ```bash
-   git clone <repository-url>
-   cd ejenda
+   git clone git@github.com:jasminelinang/cse264-ejenda.git
+   cd cse264-ejenda
    'npm install'
    'npm run dev' on both client and server side
    .env file is needed to connect to supabase
