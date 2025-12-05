@@ -1,49 +1,75 @@
-# cse264-ejenda
-### 3. Application Functionality:
-### Ejenda is a web application designed to help users organize, schedule, and track daily tasks across academic and personal life. The application will allow users to:
+# cse264 - Ejenda
 
-- Create, edit, and delete workout routines or meal prep times
+## Project Members
+- Aliza Askari  
+- Meghan Ho  
+- Jasmine Linang  
 
-- Categorize ingredients and meal plans
+---
 
-- Set due dates and reminders
+## Frameworks and Libraries
 
-- View tasks in list or calendar format
+**Frontend:** React + Vite  
+**Backend:** Supabase  
+**New Library:** GSAP  
+**Internal REST API:** Node / Express  
+**External REST APIs:** Wger, TheMealDB  
 
-- Log in and store data securely
+---
 
-- The application meets the project requirements by providing:
+## 1. Overview
 
-- A working account authentication and database
+Ejenda is a web application designed to help users organize, schedule, and track daily tasks across academic and personal life. The platform centralizes workouts, meal prep planning, ingredient tracking, and scheduling into one unified interface.
 
-- An interactive, user-friendly UI
+---
 
-- Real-time data storage and retrieval
+## 2. Features and Functionality
 
-- Multiple pages and dynamic application behavior
+Ejenda provides the following capabilities:
 
-### 4. User Stories:
+- Create workout routines or meal-prep schedules  
+- Add ingredients and meal plans to the dashboard  
+- Give daily affirmations 
+- View tasks in both list and calendar formats  
+- Log in and store user data in the database  
 
-### When a user visits Ejenda, they will first be presented with a login or sign-up screen. After authentication, the user can:
+**The application fulfills the course project requirements by offering:**
 
-- Create a new/edit/delete workout based on goals
+- Fully functional user authentication and database integration  
+- An interactive, user-friendly interface  
+- Real-time data storage and retrieval  
+- Multiple pages and dynamic application behavior  
 
-- Create a meal prep plan for the week according to protein goals
+---
 
-- Create a weekly ingredients list
+## 3. User Workflow
 
-- Work around User's Google Calendar API to create workout routines and cooking times
+When a user visits Ejenda, they first encounter a login or sign-up screen. After successful authentication, users can:
 
-- This workflow supports daily task management in a clean, centralized format.
+- Create, edit, and delete workouts based on fitness goals  
+- Build weekly meal-prep plans based on protein or nutrition targets (future implementation) 
+- Generate a recipe list  
+- Integrate with the Google Calendar API to sync workout routines and cooking times (future implementation goal) 
 
-### 5. Tech Stack:
+This workflow allows users to manage daily tasks in a clean and centralized system.
 
-- Frontend: React, JavaScript, CSS
+---
 
-- Backend: Node-based API functions (if needed), AWS Amplify configuration
+## 4. Tech Stack
 
-- Database: Supabase (PostgreSQL backend managed via Supabase)
+- **Frontend:** React, JavaScript, CSS  
+- **Backend:** Node-based API functions (as needed), AWS Amplify configuration  
+- **Database:** Supabase (PostgreSQL managed via Supabase)   
+- **Additional Libraries:** React Router, Supabase Client SDK, GSAP, date/calendar UI library (TBD)  
 
-- Hosting / Deployment: AWS Amplify
+---
 
-- Other Libraries: React Router, Supabase Client SDK, Date/calendar UI library (TBD), GSAP
+## 5. Installation
+
+1. Clone the repository:  
+   ```bash
+   git clone <repository-url>
+   cd ejenda
+   'npm install'
+   'npm run dev' on both client and server side
+   .env file is needed to connect to supabase
